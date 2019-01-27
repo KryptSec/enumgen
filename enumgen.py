@@ -20,7 +20,7 @@ args  = parser.parse_args()
 
 
 ### Art Area
-artPortScan = """
+artPortScan = colored("""
                               __                                        
         ______   ____________/  |_    ______ ____ _____    ____   ______
         \\____ \\ /  _ \\_  __ \\   __\\  /  ___// ___\\\\__  \\  /    \\ /  ___/
@@ -28,9 +28,9 @@ artPortScan = """
         |   __/ \\____/|__|   |__|   /____  >\\___  >____  /___|  /____  >
         |__|                             \\/     \\/     \\/     \\/     \\/
         ---  Put Nmap, Unicorn Scan, or other scans you want handy  ---
-"""
+""", 'green')
 
-artServices = """
+artServices = colored("""
                                         .__                     
                 ______ ______________  _|__| ____  ____   ______
                /  ___// __ \\_  __ \\  \\/ /  |/ ___\\/ __ \\ /  ___/
@@ -39,6 +39,7 @@ artServices = """
                    \\/     \\/                    \\/    \\/     \\/ 
                -- List Ports You Find here with some notes! ---
 For each port, XX == port num.
+""", 'green') + """"
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │                                                             versions! cves?? │
 └──[∙ Port Service Type ∙]──────────────────────────────────────────────[ XX ]─┘
@@ -50,13 +51,14 @@ For each port, XX == port num.
 
 """
 
-artWebServer = """
+artWebServer = colored("""
                        ___.  
          __  _  __ ____\\_ |__     ______ ______________  __ ___________ 
          \\ \\/ \\/ // __ \\| __ \\   /  ___// __ \\_  __ \\  \\/ // __ \\_  __ \\
           \\     /\\  ___/| \\_\\ \\  \\___ \\\\  ___/|  | \\/\\   /\\  ___/|  | \\/
            \\/\\_/  \\___  >___  / /____  >\\___  >__|    \\_/  \\___  >__|   
                       \\/    \\/       \\/     \\/                 \\/    
+""", 'green') + """
 ┌──────────────────────────────────────────────────────────────────────────────┐
 └──[∙ Server Version ∙]────────────────────────────────────────────────────────┘
 ┌──────────────────────────────────────────────────────────────────────────────┐
@@ -85,25 +87,29 @@ artWebServer = """
 └──────────────────────────────────────────────────────────────────────────────┘
 """
 
-artEnumNotes = """
+artEnumNotes = colored("""
                                        __                 
                           ____   _____/  |_  ____   ______
                          /    \\ /  _ \\   __\\/ __ \\ /  ___/
                         |   |  (  <_> )  | \\  ___/ \\___ \\ 
                         |___|  /\\____/|__|  \\___  >____  >
                              \\/                 \\/     \\/
-          --- Keep track of yr thoughts as you go through your scan. ---
+""", 'green') + """"                             
+        ---  Keep track of your thoughts as you go through your scan.  ---
           --- Especially after you try a new thing or hit milestone! ---
 
-
+"""\
++ colored("""
              .__                              __                 __   
              |__| _____ ______   ____________/  |______    _____/  |_ 
              |  |/     \\\\____ \\ /  _ \\_  __ \\   __\\__  \\  /    \\   __\\
-             |  |  Y Y  \\  |_> >  <_> )  | \\/|  |  / __ \\|   |  \\  |  
+             |  |  Y Y  \\  |_> >  [_] )  | \\/|  |  / __ \\|   |  \\  |  
              |__|__|_|  /   __/ \\____/|__|   |__| (____  /___|  /__|  
                       \\/|__|                           \\/     \\/     
+                      """, 'green')\
++colored("""
              -- Put creds, commands, and other important info here! --
-"""
+""", 'yellow')
 
 
 artCheatsheet = colored("""$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -179,11 +185,11 @@ def genEnum():
 	nUDP          = nmapTemplates[3] + "-oN " + sName + "_udp.nmap " + sHost
 
 	print(artPortScan)
-	print("[ Impatient ] " + nImpatient )
-	print("[ Quick.... ] " + nQuick )
-	print("[ Brutal... ] " + nBrutal )
-	print("[ UDP...... ] " + nUDP )
-	print("[!] Not sure what something is? Try amap!")
+	print("[ " + colored("Impatient ", 'cyan') + "] " + nImpatient )
+	print("[ " + colored("Quick.... ",'blue') + "] " + nQuick )
+	print("[ " + colored("Brutal... ",'red') + "] " + nBrutal )
+	print("[ " + colored("UDP...... ",'cyan') + "] " + nUDP )
+	print("[" + colored("!", 'yellow') + "] Not sure what something is? Try amap!")
 
 	print(artServices)
 	print(artWebServer)
@@ -346,12 +352,13 @@ def genPostex():
 
 # Checking Vars
 if args.sHost:
-    sHost = args.sHost
+	sHost = args.sHost
 else:
-    print("Box IP Required! use flag -H <ip/hostname>")
-    exit()
+	print("Box IP Required! use flag -H <ip/hostname>")
+	print("Ex: enumgen -H 10.10.10.10 -n BoxName -o Windows -g cheatsheet")
+	exit()
 if args.sName:
-    sName = args.sName
+	sName = args.sName
 else:
     print("Box Name Required! use flag -n <box name>.")
     exit()
