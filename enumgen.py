@@ -1,5 +1,6 @@
+#!/usr/bin/python3
 import requests, base64, json, sys, argparse
-
+from termcolor import colored, cprint
 # Arguments
 parser = argparse.ArgumentParser(description='Enum Generator')
 parser.add_argument("-H",dest='sHost',help='Box IP/Hostname',nargs='?')
@@ -105,14 +106,14 @@ artEnumNotes = """
 """
 
 
-artCheatsheet = """$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+artCheatsheet = colored("""$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     _________ .__                   __   _________.__                   __   
     \\_   ___ \\|  |__   ____ _____ _/  |_/   _____/|  |__   ____   _____/  |_ 
     /    \\  \\/|  |  \\_/ __ \\\\__  \\\\   __\\_____  \\ |  |  \\_/ __ \\_/ __ \\   __\\
     \\     \\___|   Y  \\  ___/ / __ \\|  | /        \\|   Y  \\  ___/\\  ___/|  |  
      \\______  /___|  /\\___  >____  /__|/_______  /|___|  /\\___  >\\___  >__|  
             \\/     \\/     \\/     \\/            \\/      \\/     \\/     \\/     
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"""
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$""", 'green')
 
 def genEnum():
 	# Writing host.txt with hostname or IP
@@ -209,36 +210,42 @@ def genCheatSheet():
 
 	# List commands with just host
 	def lCmd(cmdList):
-	    for cmd in cmdList:
-	        print("  "+cmd.format(sHost))
+		for cmd in cmdList:
+			print("  "+cmd.format(sHost))
+
 	### Generic Webserver Enum Commands
 	# I wanna parameterize, but how can i do that with an array?
 	# Because like, nikto does -host and -output which would hold the output in a text file
 	# Also has Plugins too which would be optional.
 
 
-	webEnum = [ "\n[ Web Enumeration ]",
-	            "nikto -host {}",
-	            "gobuster -w ~/git/SecLists/Discovery/Web-Content/big.txt -s '200,204,301,302,307,403,500' -e -fw -u http://{}",
-	            "whatweb {}"
+
+	webEnum = [ colored("\n[ Web Enumeration ]", "yellow"),
+	            colored("General", "red"), #returns color version of param
+				"["+colored("*","red")+"] "+"nikto -host {}",
+	            "["+colored("*","red")+"] "+"gobuster -w ~/git/SecLists/Discovery/Web-Content/big.txt -s '200,204,301,302,307,403,500' -e -fw -u http://{}",
+	            "["+colored("*","red")+"] "+"whatweb {}",
+				" ",
+				colored("Drupal","blue"),
+				"["+colored("*","red")+"] "+"droopescan scan -u http://{}"
 	    ]
 
 
 	# Commands for quickly testing shit.
 	# Should put in a dict or something with an explanation
-	webTest = [ "\n[ Web Services Testing ]",
-	            'curl -A "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" http://{}',
-	            'curl -d "data=True" -X POST http://{}',
-	            'More Info: https://gist.github.com/subfuzion/08c5d85437d5d4f00e58\n',
-	            'sslscan {}:443',
-	            'nmap -sV --script=ssl-heartbleed {}'
+	webTest = [ colored("\n[[ Web Services Testing ]]", "yellow"),
+	            "["+colored("*","red")+"] "+'curl -A "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" http://{}',
+	            "["+colored("*","red")+"] "+'curl -d "data=True" -X POST http://{}',
+	            "["+colored("*","red")+"] "+'More Info: https://gist.github.com/subfuzion/08c5d85437d5d4f00e58\n',
+				"[" + colored("*", "red") + "] " + 'sslscan {}:443',
+				"[" + colored("*", "red") + "] " + 'nmap -sV --script=ssl-heartbleed {}'
 	          ]
 	# Little things to remember
-	webTrix = [ "\n[ Web Trixxx ] ",
-	            "Bypass php execution\n    http://{}/index.php?page=php://filter/convert.base64-encode/resource=index",
-	            "Then decode b64 output\n    base64 -d indexcoded",
-	            "Pass a cookie with curl\n    curl -s http://{}/login.php -c cookie.txt -d 'user=admin&pass=admin'",
-	            "  curl -s http://{}/somepage.php?page=/etc/passwd -b cookie.txt"
+	webTrix = [ colored("\n[[ Web Trixxx ]] ", "yellow"),
+	            "["+colored("*","red")+"] "+"Bypass php execution\n    http://{}/index.php?page=php://filter/convert.base64-encode/resource=index",
+	            "["+colored("*","red")+"] "+"Then decode b64 output\n    base64 -d indexcoded",
+	            "["+colored("*","red")+"] "+"Pass a cookie with curl\n    curl -s http://{}/login.php -c cookie.txt -d 'user=admin&pass=admin'",
+	            "["+colored("*","red")+"] "+"  curl -s http://{}/somepage.php?page=/etc/passwd -b cookie.txt"
 	]
 	lCmd(webEnum)
 	lCmd(webTest)
@@ -246,65 +253,65 @@ def genCheatSheet():
 
 	### Service Enum Commands
 
-	ftpEnum  = [ "\n[ FTP Enumeration - Port 21 ]",
-	             "ftp {}",
-	             "nc {} 21",
-	             "hydra -t 1 -L users.txt -P passlist.txt {} ftp",
-	             "nmap --script=ftp-anon,ftp-bounce,ftp-libopie,ftp-proftpd-backdoor,ftp-vsftpd-backdoor,ftp-vuln-cve2010-4221,tftp-enum -p 21 {}",
-	             "Don't forget BINARY / ASCII modes!"
+	ftpEnum  = [ colored("\n[ FTP Enumeration - Port 21 ]", "yellow"),
+	             "["+colored("*","red")+"] "+"ftp {}",
+	             "["+colored("*","red")+"] "+"nc {} 21",
+	             "["+colored("*","red")+"] "+"hydra -t 1 -L users.txt -P passlist.txt {} ftp",
+	             "["+colored("*","red")+"] "+"nmap --script=ftp-anon,ftp-bounce,ftp-libopie,ftp-proftpd-backdoor,ftp-vsftpd-backdoor,ftp-vuln-cve2010-4221,tftp-enum -p 21 {}",
+	             "["+colored("*","red")+"] "+"Don't forget BINARY / ASCII modes!"
 	           ]
 
-	sshEnum  = [ "\n[ SSH Enumeration - Port 22 ]",
-	             "hydra -t 4 -L users.txt -P passlist.txt {} ssh",
-	             "nmap -v -p 22 --script=ssh2-enum-algos.nse,ssh-hostkey.nse,sshv1.nse --script-args=unsafe=1 {}"
+	sshEnum  = [ colored("\n[ SSH Enumeration - Port 22 ]", "yellow"),
+	             "["+colored("*","red")+"] "+"hydra -t 4 -L users.txt -P passlist.txt {} ssh",
+	             "["+colored("*","red")+"] "+"nmap -v -p 22 --script=ssh2-enum-algos.nse,ssh-hostkey.nse,sshv1.nse --script-args=unsafe=1 {}"
 	           ]
 
-	telnetEnum = ["\n[ Telnet Enum - Port 23 ]",
-	             "hydra -l root -P ~/SecLists/Passwords/10_million_password_list_top_100.txt {} telnet"
+	telnetEnum = [ colored("\n[ Telnet Enum - Port 23 ]", "yellow"),
+	             "["+colored("*","red")+"] "+"hydra -l root -P ~/SecLists/Passwords/10_million_password_list_top_100.txt {} telnet"
 	             ]
 
-	smtpEnum = [ "\n[ SMTP Enumeration - Port 25 ]",
-	             "telnet {} 25",
-	             "nmap -script smtp-commands.nse {}",
-	             "smtp-user-enum -M VRFY -U usernames.txt -t {}"
+	smtpEnum = [ colored("\n[ SMTP Enumeration - Port 25 ]", "yellow"),
+	             "["+colored("*","red")+"] "+"telnet {} 25",
+	             "["+colored("*","red")+"] "+"nmap -script smtp-commands.nse {}",
+	             "["+colored("*","red")+"] "+"smtp-user-enum -M VRFY -U usernames.txt -t {}"
 	           ]
 
-	snmpEnum = [ "\n[ SNMP Enumeration - Port 161 ]",
-	             "snmpwalk -c public -v1 {}",
-	             "snmpcheck -t {} -c public",
-	             "onesixtyone {} public",
-	             "python /usr/share/doc/python-impacket-doc/examples/samrdump.py SNMP {}",
-	             "snmpenum -t {}"
+	snmpEnum = [ colored("\n[ SNMP Enumeration - Port 161 ]", "yellow"),
+	             "["+colored("*","red")+"] "+"snmpwalk -c public -v1 {}",
+	             "["+colored("*","red")+"] "+"snmpcheck -t {} -c public",
+	             "["+colored("*","red")+"] "+"onesixtyone {} public",
+	             "["+colored("*","red")+"] "+"python /usr/share/doc/python-impacket-doc/examples/samrdump.py SNMP {}",
+	             "["+colored("*","red")+"] "+"snmpenum -t {}"
 	           ]
 
-	smbEnum  = [ "\n[ SMB Enumeration - Port 139/445 ]",
-	             "enum4linux -a {}",
-	             "nmap -p 139,445 --script=smb-* {}",
-	             "smbclient -L {}",
-	             "smbclient {} <sharename> -U guest",
-	             "showmount -e {}",
-	             "mount {}:/share /mnt/nfs -nolock",
-	             "mount -t cifs -o user=USERNAME,sec=ntlm,dir_mode=0077 '//{}/My Share' /mnt/cifs",
-	             "rpcclient -U '' {}"
+	smbEnum  = [ colored("\n[ SMB Enumeration - Port 139/445 ]", "yellow"),
+	             "["+colored("*","red")+"] "+"enum4linux -a {}",
+	             "["+colored("*","red")+"] "+"nmap -p 139,445 --script=smb-* {}",
+	             "["+colored("*","red")+"] "+"smbclient -L {}",
+	             "["+colored("*","red")+"] "+"smbclient {} <sharename> -U guest",
+	             "["+colored("*","red")+"] "+"showmount -e {}",
+	             "["+colored("*","red")+"] "+"mount {}:/share /mnt/nfs -nolock",
+	             "["+colored("*","red")+"] "+"mount -t cifs -o user=USERNAME,sec=ntlm,dir_mode=0077 '//{}/My Share' /mnt/cifs",
+	             "["+colored("*","red")+"] "+"rpcclient -U '' {}"
 	           ]
-	ldapEnum = [ "\n[ LDAP Enumeration - Port 339/636 ]",
-	             'ldapsearch -h 192.168.1.101 -p 389 -x -b "dc=mywebsite,dc=com"'
+	ldapEnum = [ colored("\n[ LDAP Enumeration - Port 339/636 ]", "yellow"),
+	             "["+colored("*","red")+"] "+'ldapsearch -h 192.168.1.101 -p 389 -x -b "dc=mywebsite,dc=com"'
 	           ]
-	nfsEnum  = [ "\n[ NFS Enumeration - Portt 2049 ]",
-	             "showmount -e {}",
-	             "mount -t {}:/ /tmp/nfs"
+	nfsEnum  = [ colored("\n[ NFS Enumeration - Portt 2049 ]", "yellow"),
+	             "["+colored("*","red")+"] "+"showmount -e {}",
+	             "["+colored("*","red")+"] "+"mount -t {}:/ /tmp/nfs"
 	           ]
 
-	sqlEnum  = [ "\n[ SQL Enumeration - Port 3306 ]",
-	             "nmap -sV -sC -Pn -p3306 --script=mysql-vuln-cve2012-2122,mysql-query,mysql-enum {}",
-	             "nmap -sV -Pn -p3306 --script=mysql-variables,mysql-users,mysql-empty-password,mysql-databases,mysql-brute {}",
-	             "nmap -p3306 --script=mysql-dump-hashes --script-args='username=root,password=root' {}",
-	             "mysql -h {} -u root",
-	             "mysql -h {} -u root@localhost"
+	sqlEnum  = [ colored("\n[ SQL Enumeration - Port 3306 ]", "yellow"),
+	             "["+colored("*","red")+"] "+"nmap -sV -sC -Pn -p3306 --script=mysql-vuln-cve2012-2122,mysql-query,mysql-enum {}",
+	             "["+colored("*","red")+"] "+"nmap -sV -Pn -p3306 --script=mysql-variables,mysql-users,mysql-empty-password,mysql-databases,mysql-brute {}",
+	             "["+colored("*","red")+"] "+"nmap -p3306 --script=mysql-dump-hashes --script-args='username=root,password=root' {}",
+	             "["+colored("*","red")+"] "+"mysql -h {} -u root",
+	             "["+colored("*","red")+"] "+"mysql -h {} -u root@localhost"
 	           ]
-	rdpEnum  = [ "\n[ RDP Enum ]",
-	             "rdesktop -u guest -p guest {} -g 94%",
-	             "ncrack -vv --user Administrator -P /root/passwords.txt rdp://{}"
+	rdpEnum  = [ colored("\n[ RDP Enum ]", "yellow"),
+	             "["+colored("*","red")+"] "+"rdesktop -u guest -p guest {} -g 94%",
+	             "["+colored("*","red")+"] "+"ncrack -vv --user Administrator -P /root/passwords.txt rdp://{}"
 	            ]
 	print("\n[+] Generating Service Enum Commands for {}_cheatsheet.txt".format(sName))
 	lCmd(ftpEnum)
@@ -319,7 +326,7 @@ def genCheatSheet():
 	lCmd(rdpEnum)
 
 	sqlCheat = "    show databases;\n    use dbname;\n    show tables;\n    select * from tablename;\n\n    Also possibly check for udf vuln!"
-	print("\n[+] When logged into mySQL")
+	print(colored("\n[+] When logged into mySQL", "yellow"))
 	print(sqlCheat)
 
 
@@ -359,3 +366,4 @@ if args.gen == "cheat":
 	genCheatSheet()
 if args.gen == "postex":
 	genPostex()
+
