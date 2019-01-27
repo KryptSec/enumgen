@@ -233,7 +233,10 @@ def genCheatSheet():
 	            "["+colored("*","red")+"] "+"whatweb {}",
 				" ",
 				colored("Drupal","blue"),
-				"["+colored("*","red")+"] "+"droopescan scan -u http://{}"
+				"["+colored("*","red")+"] "+"droopescan scan -u http://{}",
+                                " ",
+                                colored("WebDav","blue"),
+                                "["+colored("*", "red")+"] "+"davtest -url http://{}"
 	    ]
 
 
